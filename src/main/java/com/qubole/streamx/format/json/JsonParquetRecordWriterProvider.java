@@ -119,18 +119,17 @@ public class JsonParquetRecordWriterProvider implements RecordWriterProvider {
             int i=0;
         	for(Map.Entry<String,Object> entry: val.entrySet()) {
         		PrimitiveTypeName dataType=null;
-    			String fieldName=columns.get(i).getPath()[0];
-
+    			String fieldName=entry.getKey();
         		for (ColumnDescriptor columnDescriptor: columns) {
-        			if (fieldName.equals(entry.getKey()))
+        			if (columnDescriptor.getPath()[0].equals(entry.getKey()))
         		      dataType= columnDescriptor.getType();		
         		}
         		if (dataType!=null) {
                     recordConsumer.startField(fieldName, i);
         			convertDataType(dataType,entry.getValue().toString());
         			recordConsumer.endField(fieldName, i);
+            		i++;
         	}
-        		i++;
         }
             recordConsumer.endMessage();
         }	
